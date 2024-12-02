@@ -33,10 +33,10 @@ create lb 2000 cells allot 0 lb !
   begin dup buf 100 chars rot read-line throw while
     buf swap
     0. 2swap >number
-    2swap drop la .append
+    2swap d>s la .append
     skip-char skip-char skip-char
     0. 2swap >number
-    2drop drop lb .append
+    2drop d>s lb .append
   repeat drop
 
   close-file throw

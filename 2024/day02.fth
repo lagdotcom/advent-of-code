@@ -9,7 +9,7 @@ create buf 100 chars allot
 : get-next-number ( addr len -- addr len value )
   0. 2swap >number
   maybe-skip
-  2swap drop
+  2swap d>s
 ;
 
 : is-report-safe ( addr len -- flag )
