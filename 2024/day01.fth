@@ -1,27 +1,8 @@
+require ../list.fth
+
 create buf 100 chars allot
-create la 2000 cells allot 0 la !
-create lb 2000 cells allot 0 lb !
-
-: .length ( list -- len )
-  @
-;
-
-: .at ( list n -- addr )
-  1+ cells +
-;
-
-: .fetch ( list n -- item )
-  .at @
-;
-
-: .set ( item list n -- )
-  .at !
-;
-
-: .append ( item list -- )
-  tuck dup @ .set
-  1 swap +!
-;
+2000 list.new la
+2000 list.new lb
 
 : skip-char ( addr len -- addr+1 len-1 )
   1- swap 1+ swap
@@ -33,30 +14,30 @@ create lb 2000 cells allot 0 lb !
   begin dup buf 100 chars rot read-line throw while
     buf swap
     0. 2swap >number
-    2swap d>s la .append
+    2swap d>s la list.append
     skip-char skip-char skip-char
     0. 2swap >number
-    2drop d>s lb .append
+    2drop d>s lb list.append
   repeat drop
 
   close-file throw
 ;
 
 : sort-list { list -- }
-  list .length 0 ?do
-    list .length i 1+ ?do
-      list i .fetch
-      list j .fetch 2dup < if
-        list i .set
-        list j .set
+  list list.length 0 ?do
+    list list.length i 1+ ?do
+      list i list.fetch
+      list j list.fetch 2dup < if
+        list i list.set
+        list j list.set
       else 2drop then
     loop
   loop
 ;
 
 : total-list-differences ( -- total-difference )
-  0 la .length lb .length min 0 ?do
-    la i .fetch lb i .fetch - abs +
+  0 la list.length lb list.length min 0 ?do
+    la i list.fetch lb i list.fetch - abs +
   loop
 ;
 
@@ -67,10 +48,10 @@ create lb 2000 cells allot 0 lb !
 ;
 
 : calc-list-similarity ( -- similarity )
-  0 la .length 0 ?do
-    la i .fetch 0           ( total item count )
-    lb .length 0 ?do
-      over lb i .fetch = if 1+ then
+  0 la list.length 0 ?do
+    la i list.fetch 0           ( total item count )
+    lb list.length 0 ?do
+      over lb i list.fetch = if 1+ then
     loop
     * +
   loop
