@@ -43,6 +43,7 @@ variable total
 
 : day-03 ( addr len -- )
   0 total !
+
   r/o open-file throw
   begin dup buf 10000 chars rot read-line throw while
     0 ?do
@@ -51,6 +52,7 @@ variable total
       then
     loop
   repeat drop
+  close-file throw
 
   ." instruction total: " total @ . cr
 ;
