@@ -24,7 +24,7 @@
   then
 ;
 
-: check-match ( addr -- value|0 )
+: check-mul ( addr -- value|0 )
   s" mul(" accept-str if
     accept-number if
       >r ',' accept-ch if
@@ -38,6 +38,14 @@
   then drop false
 ;
 
+: check-do ( addr -- flag )
+  s" do()" accept-str nip
+;
+
+: check-don't ( addr -- flag )
+  s" don't()" accept-str nip
+;
+
 create buf 10000 chars allot
 variable total
 
@@ -47,7 +55,7 @@ variable total
   r/o open-file throw
   begin dup buf 10000 chars rot read-line throw while
     0 ?do
-      buf i + check-match ?dup if
+      buf i + check-mul ?dup if
         total +!
       then
     loop
@@ -57,4 +65,33 @@ variable total
   ." instruction total: " total @ . cr
 ;
 
-s" day03.input" day-03 bye
+variable enabled
+
+: day-03-part-2 ( addr len -- )
+  0 total !
+  true enabled !
+
+  r/o open-file throw
+  begin dup buf 10000 chars rot read-line throw while
+    0 ?do
+      buf i + check-do if
+        true enabled !
+      then
+
+      buf i + check-don't if
+        false enabled !
+      then
+
+      enabled @ if
+        buf i + check-mul ?dup if
+          total +!
+        then
+      then
+    loop
+  repeat drop
+  close-file throw
+
+  ." instruction total: " total @ . cr
+;
+
+s" day03.input" day-03-part-2 bye
